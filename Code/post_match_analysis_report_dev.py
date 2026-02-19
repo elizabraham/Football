@@ -211,19 +211,89 @@ else:
          second_half = filtered_df[(filtered_df["Mins"] > 10) | (filtered_df["Mins"] == 10) & (filtered_df["Secs"] > 39)]
          st.markdown("")
 
+        # Ball Possession Calculation
+        # First Half
+         bp_fh = first_half[((first_half['Event'] == 'Successful Pass') | (first_half['Event'] == 'Unsuccessful Pass') | (
+                first_half['Event'] == 'Shot On Target') | (first_half['Event'] == 'Shot Off Target') | (
+                                    first_half['Event'] == 'Goal Throw'))]
+         p_teama_fh = bp_fh[bp_fh['Team'] == team_a]
+         bp_teamb_fh = bp_fh[bp_fh['Team'] == team_b]
+
+         total_event_counts_fh = bp_fh["Event"].value_counts()
+         total_teama_events_fh = p_teama_fh["Event"].value_counts()
+         total_teamb_events_fh = bp_teamb_fh["Event"].value_counts()
+
+         bposs_pr_fh = round(((total_teama_events_fh.sum() / total_event_counts_fh.sum()) * 100), 2)
+         bposs_sbfc_fh = round(((total_teamb_events_fh.sum() / total_event_counts_fh.sum()) * 100), 2)
+
+         # Second Half
+         bp_sh = second_half[((second_half['Event'] == 'Successful Pass') | (second_half['Event'] == 'Unsuccessful Pass') | (
+                    second_half['Event'] == 'Shot On Target') | (second_half['Event'] == 'Shot Off Target') | (
+                                         second_half['Event'] == 'Goal Throw'))]
+         bp_teama_sh = bp_sh[bp_sh['Team'] == 'Prakrida FC']
+         bp_teamb_sh = bp_sh[bp_sh['Team'] == 'SBFC']
+
+         total_event_counts_sh = bp_sh["Event"].value_counts()
+         total_teama_events_sh = bp_teama_sh["Event"].value_counts()
+         total_teamb_events_sh = bp_teamb_sh["Event"].value_counts()
+
+         bposs_teama_sh = round(((total_teama_events_sh.sum() / total_event_counts_sh.sum()) * 100), 0)
+         bposs_teamb_sh = round(((total_teamb_events_sh.sum() / total_event_counts_sh.sum()) * 100), 0)
+
+         # Full Time
+         total_event_counts = total_event_counts_sh.sum() + total_event_counts_fh.sum()
+         total_teama_events = total_teama_events_sh.sum() + total_teama_events_fh.sum()
+         total_teamb_events = total_teamb_events_sh.sum() + total_teamb_events_fh.sum()
+
+         bposs_teama = round(((total_teama_events / total_event_counts) * 100), 2)
+         bposs_teamb = round(((total_teamb_events / total_event_counts) * 100), 2)
+
+         #Shots On Target
+         shot_data = filtered_df[(filtered_df["Event"] == "Shot On Target") | (filtered_df["Event"] == "Shot Off Target")]
+         shot_data_teama = len(shot_data[shot_data['Team'] == team_a].reset_index(drop=True))
+         shot_data_teamb = len(shot_data[shot_data['Team'] == team_b].reset_index(drop=True))
+
+         sot_teama = len(filtered_df[((filtered_df["Event"] == "Shot On Target") & (filtered_df["Team"] == team_a))])
+         sot_teamb = len(filtered_df[((filtered_df["Event"] == "Shot On Target") & (filtered_df["Team"] == team_b))])
+
+         shot_acc_teama = round((sot_teama / shot_data_teama), 2) * 100
+         shot_acc_teamb = round((sot_teamb / shot_data_teamb), 2) * 100
+
+         # Pass Accuracy
+         pass_data = filtered_df[(filtered_df["Event"] == "Successful Pass") | (filtered_df["Event"] == "Unsuccessful Pass")]
+         pass_data_teama = len(pass_data[pass_data['Team'] == team_a].reset_index(drop=True))
+         pass_data_teamb = len(pass_data[pass_data['Team'] == team_b].reset_index(drop=True))
+
+         succ_pass = pass_data[(pass_data["Event"] == "Successful Pass")]
+         succ_pass_teama = len(succ_pass[succ_pass['Team'] == team_a].reset_index(drop=True))
+         succ_pass_teamb = len(succ_pass[succ_pass['Team'] == team_b].reset_index(drop=True))
+
+         pass_acc_teama = round((succ_pass_teama / pass_data_teama), 2) * 100
+         pass_acc_teamb = round((succ_pass_teamb / pass_data_teamb), 2) * 100
+
+         # Tackles
+         tackle_data = filtered_df[(filtered_df["Event"] == "Tackle")]
+         tackle_data_teama = len(shot_data[shot_data['Team'] == team_a].reset_index(drop=True))
+         tackle_data_teamb = len(shot_data[shot_data['Team'] == team_b].reset_index(drop=True))
+
+         # Shot Accuracy
+         sot_teama = len(filtered_df[((filtered_df["Event"] == "Shot On Target") & (filtered_df["Team"] == team_a))])
+         sot_teamb = len(filtered_df[((filtered_df["Event"] == "Shot On Target") & (filtered_df["Team"] == team_b))])
+
+         shot_acc_teama = round((sot_teama / shot_data_teama), 2) * 100
+         shot_acc_teamb = round((sot_teamb / shot_data_teamb), 2) * 100
 
 
- #Sample Data
-stats = [
-    ("Ball Possession", 60, 40),
-    ("Shots on Target", 45, 55),
-    ("Pass Accuracy", 75, 82),
-    ("Tackles", 38, 62),
-    ("Conversion", 20, 80),
-]
+         stats = [
+                    ("Ball Possession", bposs_teama, bposs_teamb),
+    ("Shots Accuracy", shot_acc_teama, shot_acc_teamb),
+    ("Pass Accuracy", pass_acc_teama, pass_acc_teamb),
+    ("Tackles", tackle_data_teama, tackle_data_teamb),
+    ("Shot Accuracy", 20, 80),
+         ]
 
-# Container with Card Styling
-st.markdown("""
+         # Container with Card Styling
+         st.markdown("""
     <style>
     .stat-card {
         background-color: white;
@@ -248,9 +318,22 @@ st.markdown("""
         margin-bottom: 6px;
         font-weight: 600;
     }
+    .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    }
+    .stat-left,
+    .stat-right {
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 35px;
+    text-align: center;
+    }
+
     .progress-bar {
         height: 12px;
-        width: 80%;
+        width: 50%;
         margin: 0 auto;
         background-color: #f1f1f1;
         border-radius: 20px;
@@ -271,12 +354,30 @@ st.markdown("""
 # Start HTML card container
 
 # Loop through each stat and render
-for stat_name, team1_val, team2_val in stats:
-    st.markdown(f"""
+         for stat_name, team1_val, team2_val in stats:
+
+            if stat_name in ["Tackles"]:
+                st.markdown(f"""
+                        <div class="stat-block">
+                            <div class="stat-labels">
+                                <div> ({team1_val}%)</div>
+                                <div> ({team2_val}%)</div>
+                            </div>
+                            <div class="stat-name">{stat_name}</div>
+                            <div class="progress-bar">
+                                <div class="bar-left" style="width: {team1_val}%"></div>
+                                <div class="bar-right" style="width: {team2_val}%"></div>
+                            </div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+
+            else:
+                st.markdown(f"""
         <div class="stat-block">
             <div class="stat-labels">
-                <div>Team 1 ({team1_val}%)</div>
-                <div>Team 2 ({team2_val}%)</div>
+                <div> ({team1_val}%)</div>
+                <div> ({team2_val}%)</div>
             </div>
             <div class="stat-name">{stat_name}</div>
             <div class="progress-bar">
@@ -287,7 +388,7 @@ for stat_name, team1_val, team2_val in stats:
     """, unsafe_allow_html=True)
 
 # End HTML card container
-st.markdown('</div>', unsafe_allow_html=True)
+         st.markdown('</div>', unsafe_allow_html=True)
 
 
 
