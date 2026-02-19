@@ -3,16 +3,16 @@
 Built using Streamlit and mplsoccer to analyze match-level data.
 
 Key Features:
-- Shot maps
-- Passing networks
-- xG visualization
-- Tactical zones
+- Match Summary
+- Shot Maps
+- Team performance
 
 Tech Stack:
 Python, Pandas, Streamlit, mplsoccer, Matplotlib
 
 ## Live Demo
 🔗[Post Match Analysis](https://elizabraham-football-codepost-match-analysis-report-dev-zarrdn.streamlit.app/)
+ -Note: Upload the sample match file [.csv file](https://github.com/elizabraham/Football/tree/main/Match%20files/TAL) in the app to view full stats.
 
 ## App Preview
 
