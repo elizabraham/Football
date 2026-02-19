@@ -892,39 +892,39 @@ if uploaded_file:
 
 
          # Pass Network
+         #
+         #st.subheader("Pass Network")
 
-         st.subheader("Pass Network")
+         #pass_data = filtered_df[(filtered_df["Event"] == "Successful Pass") | (filtered_df["Event"] == "Unsuccessful Pass")]
 
-         pass_data = filtered_df[(filtered_df["Event"] == "Successful Pass") | (filtered_df["Event"] == "Unsuccessful Pass")]
+         #if not pass_data.empty:
 
-         if not pass_data.empty:
+         #    pitch = Pitch(pitch_type='opta', pitch_color='white', line_color='black')
 
-             pitch = Pitch(pitch_type='opta', pitch_color='white', line_color='black')
-
-             fig, ax = pitch.draw()
-
-
-
-             pass_links = pass_data.groupby(["Player", "Team"]).size().reset_index(name="count")
-             #st.dataframe(pass_links)
-             for _, row in pass_links.iterrows():
-
-                 player, team, count = row["Player"], row["Team"], row["count"]
-
-                 color = "blue" if team == "Prakrida FC" else "red"
-
-                 ax.annotate(player, (10, 10), color=color, fontsize=10)
-
-                 ax.plot([10, 50], [10, 50], c=color, lw=count)
+         #    fig, ax = pitch.draw()
 
 
 
-             st.pyplot(fig)
+         #    pass_links = pass_data.groupby(["Player", "Team"]).size().reset_index(name="count")
+             ##st.dataframe(pass_links)
+         #    for _, row in pass_links.iterrows():
 
-         else:
+         #        player, team, count = row["Player"], row["Team"], row["count"]
 
-             st.info("No pass data available.")
+         #        color = "blue" if team == "Prakrida FC" else "red"
 
+         #        ax.annotate(player, (10, 10), color=color, fontsize=10)
+
+         #        ax.plot([10, 50], [10, 50], c=color, lw=count)
+
+
+
+         #    st.pyplot(fig)
+
+         #else:
+
+         #    st.info("No pass data available.")
+             
 
 
          # Key Metrics Summary
