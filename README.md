@@ -12,7 +12,7 @@ Tech Stack:
 Python, Pandas, Streamlit, mplsoccer, Matplotlib
 
 ## Live Demo
-🔗[Link](https://elizabraham-football-codepost-match-analysis-report-dev-zarrdn.streamlit.app/)
+🔗[Post Match Analysis](https://elizabraham-football-codepost-match-analysis-report-dev-zarrdn.streamlit.app/)
 
 ## App Preview
 
