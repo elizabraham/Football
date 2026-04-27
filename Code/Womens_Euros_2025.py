@@ -1,5 +1,6 @@
 from statsbombpy import sb
 import pandas as pd
+import requests as requests
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -39,4 +40,7 @@ for match_id in match_ids:
 
 # Combine all event data
 events_df = pd.concat(player_events)
-print(events_df.columns)
+pd.set_option('display.max_columns', None)
+print(events_df)
+
+
